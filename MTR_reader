@@ -1,0 +1,53 @@
+import os
+import numpy as np
+from matplotlib import pyplot as plt
+
+import glob
+
+#np.set_printoptions(threshold=np.inf)  ##remove comment if you wish to print data
+
+os.chdir('D://PhD Synchrotron Stuff//Winter18_beamtime_data//Load Graphs')
+
+
+
+filenames = glob.glob('*.MTR') #selects all files in directory with .MTR extention
+
+for f in filenames:
+
+    data = np.genfromtxt(f,
+                         dtype = float,
+                         skip_header=19,
+                         names=True,
+                         delimiter=',',
+                         unpack = True
+                         )
+
+    #print(data)
+    
+
+    i = 0
+    np.elongation = []
+    np.force = []       #set iterative counter and empty arrays to store the extention and load values (columns 1 and 2 in the MTR files)
+
+    x = data.size
+
+    while i < x:
+
+        np.elongation.insert(i, ((data[i])[1]))
+        np.force.insert(i, ((data[i])[2]))
+
+        i = i+1
+        
+    graphname = f + '.png'
+    
+    plt.figure(figsize=(20,10))
+
+    plt.plot(np.elongation, np.force, label = f)
+    plt.xlabel('Elongation (mm)')
+    plt.ylabel('Force(N)')
+    plt.legend(loc=1)
+    plt.savefig(graphname)
+
+    
+    
+#plt.show()
